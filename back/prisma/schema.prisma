@@ -1,0 +1,99 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String
+  role         String   @default("CUSTOMER") // "ADMIN" | "CUSTOMER"
+  createdAt    DateTime @default(now())
+
+  @@map("users")
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String
+  slug      String   @unique
+  icon      String
+  designs   Design[]
+  createdAt DateTime @default(now())
+
+  @@map("categories")
+}
+
+model Design {
+  id                 Int         @id @default(autoincrement())
+  categoryId         Int
+  category           Category    @relation(fields: [categoryId], references: [id])
+  name               String
+  slug               String      @unique
+  description        String?
+  pricePen           Float       @default(0.0)
+  pricePenDiscount   Float?
+  priceUsd           Float       @default(0.0)
+  priceUsdDiscount   Float?
+  imageUrl           String
+  gallery            String?     // Array de strings serializado como JSON
+  fileFormat         String
+  isFree             Boolean     @default(false)
+  downloadCount      Int         @default(0)
+  megaUrl            String
+  orderItems         OrderItem[]
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  @@map("designs")
+}
+
+model PaymentMethod {
+  id          Int      @id @default(autoincrement())
+  name        String
+  type        String   // "qr" | "link" | "transfer"
+  details     String?
+  qrImageUrl  String?
+  linkUrl     String?
+  isActive    Boolean  @default(true)
+  orders      Order[]
+
+  @@map("payment_methods")
+}
+
+model Order {
+  id                 Int         @id @default(autoincrement())
+  paymentMethodId    Int
+  paymentMethod      PaymentMethod @relation(fields: [paymentMethodId], references: [id])
+  orderCode          String      @unique
+  customerName       String
+  customerEmail      String
+  customerPhone      String?
+  status             String      @default("PENDING") // "PENDING" | "COMPLETED" | "REJECTED"
+  paymentReceiptUrl  String?
+  paymentReferenceId String?
+  totalPen           Float       @default(0.0)
+  totalUsd           Float       @default(0.0)
+  rejectionReason    String?
+  orderItems         OrderItem[]
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        Int    @id @default(autoincrement())
+  orderId   Int
+  order     Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  designId  Int
+  design    Design @relation(fields: [designId], references: [id])
+  pricePen  Float
+  priceUsd  Float
+
+  @@map("order_items")
+}
