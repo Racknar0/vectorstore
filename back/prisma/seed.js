@@ -84,6 +84,13 @@ async function main() {
       fileFormat: 'AI + PSD',
       isFree: false,
       megaUrl: 'https://mega.nz/file/dummy1#key_barcelona_champions',
+      tags: {
+        connectOrCreate: [
+          { where: { slug: 'futbol' }, create: { name: 'Fútbol', slug: 'futbol' } },
+          { where: { slug: 'champions' }, create: { name: 'Champions', slug: 'champions' } },
+          { where: { slug: 'barcelona' }, create: { name: 'Barcelona', slug: 'barcelona' } }
+        ]
+      }
     },
   });
 
@@ -102,6 +109,13 @@ async function main() {
       fileFormat: 'AI',
       isFree: false,
       megaUrl: 'https://mega.nz/file/dummy2#key_guerrero_grunge',
+      tags: {
+        connectOrCreate: [
+          { where: { slug: 'futbol' }, create: { name: 'Fútbol', slug: 'futbol' } },
+          { where: { slug: 'grunge' }, create: { name: 'Grunge', slug: 'grunge' } },
+          { where: { slug: 'retro' }, create: { name: 'Retro', slug: 'retro' } }
+        ]
+      }
     },
   });
 
@@ -120,6 +134,13 @@ async function main() {
       fileFormat: 'AI + PSD + SVG',
       isFree: false,
       megaUrl: 'https://mega.nz/file/dummy3#key_galaxy_purple',
+      tags: {
+        connectOrCreate: [
+          { where: { slug: 'esports' }, create: { name: 'E-Sports', slug: 'esports' } },
+          { where: { slug: 'galaxy' }, create: { name: 'Galaxy', slug: 'galaxy' } },
+          { where: { slug: 'futurista' }, create: { name: 'Futurista', slug: 'futurista' } }
+        ]
+      }
     },
   });
 
@@ -138,6 +159,63 @@ async function main() {
       fileFormat: 'AI',
       isFree: false,
       megaUrl: 'https://mega.nz/file/dummy4#key_military_camo',
+      tags: {
+        connectOrCreate: [
+          { where: { slug: 'motocross' }, create: { name: 'Motocross', slug: 'motocross' } },
+          { where: { slug: 'camo' }, create: { name: 'Camo', slug: 'camo' } },
+          { where: { slug: 'militar' }, create: { name: 'Militar', slug: 'militar' } }
+        ]
+      }
+    },
+  });
+
+  await prisma.design.create({
+    data: {
+      categoryId: catMotocross.id,
+      name: 'Flame Racing Orange',
+      slug: 'flame-racing-orange',
+      description: 'Jersey de motocross con patrón de llamas en naranja y negro. Diseño dinámico y agresivo para competiciones.',
+      pricePen: 20.00,
+      pricePenDiscount: 15.00,
+      priceUsd: 5.30,
+      priceUsdDiscount: 3.90,
+      imageUrl: '/mockups/jersey_5.png',
+      gallery: JSON.stringify(['/mockups/jersey_5.png']),
+      fileFormat: 'PSD',
+      isFree: false,
+      megaUrl: 'https://mega.nz/file/dummy6#key_flame_racing',
+      tags: {
+        connectOrCreate: [
+          { where: { slug: 'motocross' }, create: { name: 'Motocross', slug: 'motocross' } },
+          { where: { slug: 'flame' }, create: { name: 'Flame', slug: 'flame' } },
+          { where: { slug: 'racing' }, create: { name: 'Racing', slug: 'racing' } }
+        ]
+      }
+    },
+  });
+
+  await prisma.design.create({
+    data: {
+      categoryId: catCasual.id,
+      name: 'Retro Wave Pink',
+      slug: 'retro-wave-pink',
+      description: 'Diseño retro con olas de gradiente en azul navy y rosa. Estilo synthwave para los amantes de lo vintage.',
+      pricePen: 15.00,
+      pricePenDiscount: null,
+      priceUsd: 4.00,
+      priceUsdDiscount: null,
+      imageUrl: '/mockups/jersey_6.png',
+      gallery: JSON.stringify(['/mockups/jersey_6.png']),
+      fileFormat: 'AI + SVG',
+      isFree: false,
+      megaUrl: 'https://mega.nz/file/dummy7#key_retro_wave',
+      tags: {
+        connectOrCreate: [
+          { where: { slug: 'casual' }, create: { name: 'Casual', slug: 'casual' } },
+          { where: { slug: 'retro' }, create: { name: 'Retro', slug: 'retro' } },
+          { where: { slug: 'synthwave' }, create: { name: 'Synthwave', slug: 'synthwave' } }
+        ]
+      }
     },
   });
 
@@ -156,6 +234,39 @@ async function main() {
       fileFormat: 'AI',
       isFree: true,
       megaUrl: 'https://mega.nz/file/dummy5#key_argentina_free',
+      tags: {
+        connectOrCreate: [
+          { where: { slug: 'futbol' }, create: { name: 'Fútbol', slug: 'futbol' } },
+          { where: { slug: 'argentina' }, create: { name: 'Argentina', slug: 'argentina' } },
+          { where: { slug: 'free' }, create: { name: 'Free', slug: 'free' } }
+        ]
+      }
+    },
+  });
+
+  await prisma.design.create({
+    data: {
+      categoryId: catFutbol.id,
+      name: 'Chelsea Blackout Edition',
+      slug: 'chelsea-blackout-edition',
+      description: 'Versión blackout del Chelsea con patrones graffiti. Diseño urbano y moderno para equipos exigentes.',
+      pricePen: 28.00,
+      pricePenDiscount: 22.00,
+      priceUsd: 7.50,
+      priceUsdDiscount: 5.90,
+      imageUrl: '/mockups/jersey_2.png',
+      gallery: JSON.stringify(['/mockups/jersey_2.png']),
+      fileFormat: 'AI + PSD',
+      isFree: false,
+      megaUrl: 'https://mega.nz/file/dummy8#key_chelsea_blackout',
+      tags: {
+        connectOrCreate: [
+          { where: { slug: 'futbol' }, create: { name: 'Fútbol', slug: 'futbol' } },
+          { where: { slug: 'chelsea' }, create: { name: 'Chelsea', slug: 'chelsea' } },
+          { where: { slug: 'blackout' }, create: { name: 'Blackout', slug: 'blackout' } },
+          { where: { slug: 'urbano' }, create: { name: 'Urbano', slug: 'urbano' } }
+        ]
+      }
     },
   });
 

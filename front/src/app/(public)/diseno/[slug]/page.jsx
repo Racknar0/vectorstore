@@ -12,6 +12,7 @@ export default function DetalleDiseno({ params }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedImage, setSelectedImage] = useState(0);
+  const [imageErrors, setImageErrors] = useState({});
   const { addItem, isInCart, removeItem } = useCart();
 
   useEffect(() => {
@@ -66,9 +67,22 @@ export default function DetalleDiseno({ params }) {
   }
 
   const inCart = isInCart(design.id);
-  const allImages = design.gallery?.length > 0 
-    ? design.gallery.map(img => resolveImageUrl(img)) 
-    : [resolveImageUrl(design.imageUrl)];
+  // Combinar imagen principal y galería sin duplicados
+  const imageList = [];
+  if (design.imageUrl) {
+    imageList.push(design.imageUrl);
+  }
+  if (design.gallery && Array.isArray(design.gallery)) {
+    design.gallery.forEach((img) => {
+      if (img && !imageList.includes(img)) {
+        imageList.push(img);
+      }
+    });
+  }
+
+  const allImages = imageList.length > 0 
+    ? imageList.map(img => resolveImageUrl(img)) 
+    : ['/default_placeholder.png'];
 
   const currentPricePen = design.pricePenDiscount !== null && design.pricePenDiscount !== undefined 
     ? design.pricePenDiscount 
@@ -96,10 +110,13 @@ export default function DetalleDiseno({ params }) {
         <div className="detalle__gallery">
           <div className="detalle__gallery-main" style={{ position: 'relative', width: '100%', height: '500px', overflow: 'hidden', borderRadius: '12px' }}>
             <img
-              src={allImages[selectedImage]}
+              src={imageErrors[allImages[selectedImage]] || !allImages[selectedImage] ? '/default_placeholder.png' : allImages[selectedImage]}
               alt={design.name}
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               className="detalle__gallery-image"
+              onError={() => {
+                setImageErrors(prev => ({ ...prev, [allImages[selectedImage]]: true }));
+              }}
             />
             {design.isFree && <span className="detalle__gallery-badge-free">GRATIS</span>}
             {hasDiscountPen && !design.isFree && <span className="detalle__gallery-badge-sale">OFERTA</span>}
@@ -113,7 +130,14 @@ export default function DetalleDiseno({ params }) {
                   onClick={() => setSelectedImage(i)}
                   style={{ width: '80px', height: '80px', overflow: 'hidden', borderRadius: '8px', padding: 0 }}
                 >
-                  <img src={img} alt={`Vista ${i + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <img
+                    src={imageErrors[img] ? '/default_placeholder.png' : img}
+                    alt={`Vista ${i + 1}`}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    onError={() => {
+                      setImageErrors(prev => ({ ...prev, [img]: true }));
+                    }}
+                  />
                 </button>
               ))}
             </div>
@@ -233,7 +257,15 @@ export default function DetalleDiseno({ params }) {
             return (
               <Link key={d.id} href={`/diseno/${d.slug}`} className="design-card glass-card">
                 <div className="design-card__image-wrapper" style={{ position: 'relative', width: '100%', height: '200px', overflow: 'hidden' }}>
-                  <img src={resolveImageUrl(d.imageUrl)} alt={d.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} className="design-card__image" />
+                  <img 
+                    src={!d.imageUrl || imageErrors[resolveImageUrl(d.imageUrl)] ? '/default_placeholder.png' : resolveImageUrl(d.imageUrl)} 
+                    alt={d.name} 
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                    className="design-card__image" 
+                    onError={() => {
+                      setImageErrors(prev => ({ ...prev, [resolveImageUrl(d.imageUrl)]: true }));
+                    }}
+                  />
                   <div className="design-card__overlay">
                     <span className="design-card__view-btn">Ver diseño</span>
                   </div>

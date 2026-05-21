@@ -23,7 +23,9 @@ export default function PedidosPage() {
   };
 
   useEffect(() => {
-    loadOrders();
+    Promise.resolve().then(() => {
+      loadOrders();
+    });
   }, []);
 
   const handleApprove = async (id, code) => {
@@ -34,7 +36,6 @@ export default function PedidosPage() {
       showCancelButton: true,
       confirmButtonText: 'Sí, aprobar',
       cancelButtonText: 'Cancelar',
-      confirmButtonColor: 'var(--color-primary)',
     });
 
     if (result.isConfirmed) {
@@ -63,9 +64,11 @@ export default function PedidosPage() {
       inputLabel: 'Razón del rechazo (se le notificará al cliente)',
       inputPlaceholder: 'Ej: Comprobante ilegible / Monto incorrecto',
       showCancelButton: true,
+      customClass: {
+        confirmButton: 'swal-btn-danger'
+      },
       confirmButtonText: 'Sí, rechazar',
       cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#ef4444',
       inputValidator: (value) => {
         if (!value) {
           return '¡Debes ingresar una razón para rechazar!';
@@ -105,16 +108,18 @@ export default function PedidosPage() {
     const receiptUrl = resolveImageUrl(url);
     Swal.fire({
       title: 'Comprobante de Pago',
+      width: '550px',
       html: `
-        <div style="margin-bottom: 12px; font-weight: bold; color: var(--color-text-light);">
-          ID de referencia: ${refId || 'No proporcionado'}
-        </div>
-        <div style="max-height: 50vh; overflow-y: auto;">
-          <img src="${receiptUrl}" style="width: 100%; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);" alt="Comprobante" />
+        <div class="swal-scroll-container">
+          <div style="margin-bottom: 16px; font-weight: 600; color: var(--text-primary); text-align: center; font-size: 0.95rem;">
+            ID de referencia: <span style="font-family: monospace; color: var(--accent-cyan); background: rgba(34, 211, 238, 0.1); padding: 2px 8px; border-radius: 4px;">${refId || 'No proporcionado'}</span>
+          </div>
+          <div style="max-height: 50vh; overflow-y: auto; text-align: center; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: center; align-items: center;">
+            <img src="${receiptUrl}" onerror="this.src='/default_placeholder.png';" style="max-width: 100%; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); object-fit: contain;" alt="Comprobante" />
+          </div>
         </div>
       `,
       confirmButtonText: 'Cerrar',
-      width: '500px',
     });
   };
 

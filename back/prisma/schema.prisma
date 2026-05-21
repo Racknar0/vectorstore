@@ -46,10 +46,21 @@ model Design {
   downloadCount      Int         @default(0)
   megaUrl            String
   orderItems         OrderItem[]
+  tags               Tag[]
   createdAt          DateTime    @default(now())
   updatedAt          DateTime    @updatedAt
 
   @@map("designs")
+}
+
+model Tag {
+  id        Int      @id @default(autoincrement())
+  name      String
+  slug      String   @unique
+  designs   Design[]
+  createdAt DateTime @default(now())
+
+  @@map("tags")
 }
 
 model PaymentMethod {

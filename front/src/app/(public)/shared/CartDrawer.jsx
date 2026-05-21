@@ -1,8 +1,8 @@
 'use client';
 import { useEffect } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import useCart from '@/store/useCart';
+import { resolveImageUrl } from '@/helpers/api';
 import './cart-drawer.scss';
 
 export default function CartDrawer() {
@@ -72,12 +72,12 @@ export default function CartDrawer() {
           ) : (
             items.map((item) => (
               <div key={item.id} className="cart-drawer__item">
-                <Image
-                  src={item.image}
+                <img
+                  src={resolveImageUrl(item.image)}
                   alt={item.name}
-                  width={72}
-                  height={72}
                   className="cart-drawer__item-img"
+                  style={{ width: '72px', height: '72px', objectFit: 'cover', borderRadius: '8px' }}
+                  onError={(e) => { e.target.src = '/default_placeholder.png'; }}
                 />
                 <div className="cart-drawer__item-info">
                   <Link href={`/diseno/${item.slug}`} className="cart-drawer__item-name" onClick={closeDrawer}>

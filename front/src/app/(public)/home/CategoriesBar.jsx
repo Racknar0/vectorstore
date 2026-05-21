@@ -1,10 +1,11 @@
 'use client';
 import { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
-import { CATEGORIES } from '@/helpers/mockData';
+import { apiGet } from '@/helpers/api';
 
 export default function CategoriesBar() {
   const scrollRef = useRef(null);
+  const [categories, setCategories] = useState([]);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
 
@@ -16,6 +17,18 @@ export default function CategoriesBar() {
   };
 
   useEffect(() => {
+    async function loadCategories() {
+      try {
+        const data = await apiGet('/categories');
+        setCategories(data);
+      } catch (err) {
+        console.error('Error loading categories:', err);
+      }
+    }
+    loadCategories();
+  }, []);
+
+  useEffect(() => {
     checkScroll();
     const el = scrollRef.current;
     if (el) el.addEventListener('scroll', checkScroll, { passive: true });
@@ -24,7 +37,7 @@ export default function CategoriesBar() {
       if (el) el.removeEventListener('scroll', checkScroll);
       window.removeEventListener('resize', checkScroll);
     };
-  }, []);
+  }, [categories]);
 
   const scroll = (dir) => {
     const el = scrollRef.current;
@@ -32,6 +45,8 @@ export default function CategoriesBar() {
     const amount = 320;
     el.scrollBy({ left: dir === 'left' ? -amount : amount, behavior: 'smooth' });
   };
+
+  if (categories.length === 0) return null;
 
   return (
     <section className="categories-bar container" id="categories-section">
@@ -63,7 +78,7 @@ export default function CategoriesBar() {
       <div className="categories-bar__track">
         {canScrollLeft && <div className="categories-bar__fade categories-bar__fade--left" />}
         <div className="categories-bar__list" ref={scrollRef}>
-          {CATEGORIES.map((cat) => (
+          {categories.map((cat) => (
             <Link
               key={cat.id}
               href={`/catalogo?category=${cat.slug}`}

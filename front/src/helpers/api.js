@@ -112,7 +112,7 @@ export const getMe = async () => {
 
 // Resolver URLs relativas de imágenes (ej: /uploads/... o /mockups/...)
 export const resolveImageUrl = (path) => {
-  if (!path) return '/placeholder.png';
+  if (!path) return '/default_placeholder.png';
   if (path.startsWith('http://') || path.startsWith('https://')) return path;
   
   // Quitar la barra inclinada del backend si el path ya la tiene

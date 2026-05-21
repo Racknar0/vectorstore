@@ -28,6 +28,14 @@ if (!fs.existsSync(uploadsDir)) {
 // Ejemplo: http://localhost:5000/uploads/comprobante.png
 app.use('/uploads', express.static(uploadsDir));
 
+// Servir la carpeta de mockups de manera pública
+// Ejemplo: http://localhost:5000/mockups/jersey_1.png
+const mockupsDir = path.join(__dirname, 'mockups');
+if (!fs.existsSync(mockupsDir)) {
+  fs.mkdirSync(mockupsDir, { recursive: true });
+}
+app.use('/mockups', express.static(mockupsDir));
+
 // Importar Rutas
 const authRoutes = require('./routes/auth');
 const categoryRoutes = require('./routes/categories');

@@ -37,6 +37,9 @@ export default function Footer() {
 
         <div className="footer__bottom">
           <span>© 2026 VectorStore. Todos los derechos reservados.</span>
+          <Link href="/login" className="footer__cms-link">
+            ⚙️ Panel CMS
+          </Link>
         </div>
       </div>
     </footer>

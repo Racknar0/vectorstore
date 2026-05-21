@@ -22,27 +22,33 @@ export default function CategoriasPage() {
   };
 
   useEffect(() => {
-    loadCategories();
+    Promise.resolve().then(() => {
+      loadCategories();
+    });
   }, []);
 
   const handleCreate = async () => {
     const { value: formValues } = await Swal.fire({
       title: 'Crear Nueva Categoría',
+      width: '500px',
       html: `
-        <div style="margin-bottom: 12px; text-align: left;">
-          <label style="display: block; font-size: 0.85rem; color: #ccc; margin-bottom: 4px;">Nombre *</label>
-          <input id="swal-cat-name" class="swal2-input" style="margin: 0; width: 100%; box-sizing: border-box;" placeholder="Ej: Gaming" required />
-        </div>
-        <div style="text-align: left;">
-          <label style="display: block; font-size: 0.85rem; color: #ccc; margin-bottom: 4px;">Icono (Emoji) *</label>
-          <input id="swal-cat-icon" class="swal2-input" style="margin: 0; width: 100%; box-sizing: border-box;" placeholder="Ej: 🎮" required />
+        <div class="swal-scroll-container">
+          <div class="swal-grid">
+            <div class="swal-col-12">
+              <label class="swal-label">Nombre de la Categoría *</label>
+              <input id="swal-cat-name" class="swal-input-custom" placeholder="Ej: Gaming" required />
+            </div>
+            <div class="swal-col-12">
+              <label class="swal-label">Icono (Emoji) *</label>
+              <input id="swal-cat-icon" class="swal-input-custom" placeholder="Ej: 🎮" required />
+            </div>
+          </div>
         </div>
       `,
       focusConfirm: false,
       showCancelButton: true,
       confirmButtonText: 'Guardar',
       cancelButtonText: 'Cancelar',
-      confirmButtonColor: 'var(--color-primary)',
       preConfirm: () => {
         const name = document.getElementById('swal-cat-name').value.trim();
         const icon = document.getElementById('swal-cat-icon').value.trim();
@@ -76,21 +82,25 @@ export default function CategoriasPage() {
   const handleEdit = async (cat) => {
     const { value: formValues } = await Swal.fire({
       title: 'Editar Categoría',
+      width: '500px',
       html: `
-        <div style="margin-bottom: 12px; text-align: left;">
-          <label style="display: block; font-size: 0.85rem; color: #ccc; margin-bottom: 4px;">Nombre</label>
-          <input id="swal-cat-name" class="swal2-input" style="margin: 0; width: 100%; box-sizing: border-box;" value="${cat.name}" placeholder="Ej: Gaming" required />
-        </div>
-        <div style="text-align: left;">
-          <label style="display: block; font-size: 0.85rem; color: #ccc; margin-bottom: 4px;">Icono (Emoji)</label>
-          <input id="swal-cat-icon" class="swal2-input" style="margin: 0; width: 100%; box-sizing: border-box;" value="${cat.icon}" placeholder="Ej: 🎮" required />
+        <div class="swal-scroll-container">
+          <div class="swal-grid">
+            <div class="swal-col-12">
+              <label class="swal-label">Nombre de la Categoría *</label>
+              <input id="swal-cat-name" class="swal-input-custom" value="${cat.name}" placeholder="Ej: Gaming" required />
+            </div>
+            <div class="swal-col-12">
+              <label class="swal-label">Icono (Emoji) *</label>
+              <input id="swal-cat-icon" class="swal-input-custom" value="${cat.icon}" placeholder="Ej: 🎮" required />
+            </div>
+          </div>
         </div>
       `,
       focusConfirm: false,
       showCancelButton: true,
       confirmButtonText: 'Actualizar',
       cancelButtonText: 'Cancelar',
-      confirmButtonColor: 'var(--color-primary)',
       preConfirm: () => {
         const name = document.getElementById('swal-cat-name').value.trim();
         const icon = document.getElementById('swal-cat-icon').value.trim();
@@ -127,7 +137,9 @@ export default function CategoriasPage() {
       text: `Eliminarás la categoría "${name}". Esta acción no se puede deshacer y fallará si tiene diseños asociados.`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#ef4444',
+      customClass: {
+        confirmButton: 'swal-btn-danger'
+      },
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar'
     });

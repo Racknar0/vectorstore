@@ -6,11 +6,15 @@ import { apiGet, resolveImageUrl } from '@/helpers/api';
 import './catalogo.scss';
 
 function DesignCard({ design }) {
-  const imageUrl = resolveImageUrl(design.imageUrl);
+  const [imageError, setImageError] = useState(false);
   const price = design.pricePenDiscount !== null && design.pricePenDiscount !== undefined 
     ? design.pricePenDiscount 
     : design.pricePen;
   const hasDiscount = design.pricePenDiscount !== null && design.pricePenDiscount !== undefined;
+
+  const imageUrl = imageError || !design.imageUrl 
+    ? '/default_placeholder.png' 
+    : resolveImageUrl(design.imageUrl);
 
   return (
     <Link href={`/diseno/${design.slug}`} className="design-card glass-card">
@@ -20,6 +24,7 @@ function DesignCard({ design }) {
           alt={design.name} 
           style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
           className="design-card__image" 
+          onError={() => setImageError(true)}
         />
         {design.isFree && <span className="design-card__free-badge">GRATIS</span>}
         {hasDiscount && !design.isFree && <span className="design-card__sale-badge">OFERTA</span>}

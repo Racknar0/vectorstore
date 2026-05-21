@@ -22,7 +22,9 @@ export default function MetodosPagoPage() {
   };
 
   useEffect(() => {
-    loadMethods();
+    Promise.resolve().then(() => {
+      loadMethods();
+    });
   }, []);
 
   const openFormModal = async (pm = null) => {
@@ -30,38 +32,41 @@ export default function MetodosPagoPage() {
     
     const { value: formValues } = await Swal.fire({
       title: isEdit ? 'Editar Método de Pago' : 'Nuevo Método de Pago',
+      width: '600px',
       html: `
-        <div style="display: grid; grid-template-columns: 1fr; gap: 12px; text-align: left;">
-          <div>
-            <label style="display: block; font-size: 0.85rem; color: #ccc; margin-bottom: 4px;">Nombre del Método *</label>
-            <input id="swal-pm-name" class="swal2-input" style="margin: 0; width: 100%; box-sizing: border-box;" placeholder="Ej: Yape, BCP Transferencia, PayPal" value="${isEdit ? pm.name : ''}" required />
-          </div>
-          <div>
-            <label style="display: block; font-size: 0.85rem; color: #ccc; margin-bottom: 4px;">Tipo *</label>
-            <select id="swal-pm-type" class="swal2-select" style="margin: 0; width: 100%; box-sizing: border-box; background: #1f1f23; border: 1px solid #444; color: white;">
-              <option value="qr" ${isEdit && pm.type === 'qr' ? 'selected' : ''}>Código QR (Yape, Plin, etc.)</option>
-              <option value="link" ${isEdit && pm.type === 'link' ? 'selected' : ''}>Enlace de Pago (PayPal, Stripe, etc.)</option>
-              <option value="transfer" ${isEdit && pm.type === 'transfer' ? 'selected' : ''}>Transferencia Bancaria</option>
-            </select>
-          </div>
-          <div>
-            <label style="display: block; font-size: 0.85rem; color: #ccc; margin-bottom: 4px;">Detalles / Instrucciones *</label>
-            <textarea id="swal-pm-details" class="swal2-textarea" style="margin: 0; width: 100%; height: 60px; box-sizing: border-box;" placeholder="Instrucciones para el cliente (número de cuenta, titular, etc.)..." required>${isEdit && pm.details ? pm.details : ''}</textarea>
-          </div>
-          <div id="swal-pm-link-container">
-            <label style="display: block; font-size: 0.85rem; color: #ccc; margin-bottom: 4px;">Enlace de Pago</label>
-            <input id="swal-pm-linkUrl" class="swal2-input" style="margin: 0; width: 100%; box-sizing: border-box;" placeholder="https://..." value="${isEdit && pm.linkUrl ? pm.linkUrl : ''}" />
-          </div>
-          <div id="swal-pm-qr-container" style="border-top: 1px solid #444; padding-top: 12px; margin-top: 8px;">
-            <label style="display: block; font-size: 0.85rem; color: #ccc; margin-bottom: 6px;">Imagen QR</label>
-            <input type="file" id="swal-pm-qr-file" style="width: 100%; font-size: 0.85rem;" accept="image/*" />
-            <div id="swal-pm-qr-preview-container" style="margin-top: 8px; display: ${isEdit && pm.qrImageUrl ? 'block' : 'none'};">
-              <img id="swal-pm-qr-preview" src="${isEdit && pm.qrImageUrl ? resolveImageUrl(pm.qrImageUrl) : ''}" style="max-height: 120px; border-radius: 6px; object-fit: cover;" />
+        <div class="swal-scroll-container">
+          <div class="swal-grid">
+            <div class="swal-col-12">
+              <label class="swal-label">Nombre del Método *</label>
+              <input id="swal-pm-name" class="swal-input-custom" placeholder="Ej: Yape, BCP Transferencia, PayPal" value="${isEdit ? pm.name : ''}" required />
             </div>
-          </div>
-          <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
-            <input type="checkbox" id="swal-pm-isActive" style="width: 18px; height: 18px; cursor: pointer;" ${!isEdit || pm.isActive ? 'checked' : ''} />
-            <label for="swal-pm-isActive" style="font-size: 0.9rem; color: #fff; cursor: pointer; user-select: none;">¿Método de pago activo?</label>
+            <div class="swal-col-12">
+              <label class="swal-label">Tipo *</label>
+              <select id="swal-pm-type" class="swal-input-custom" style="padding: 0 10px;">
+                <option value="qr" ${isEdit && pm.type === 'qr' ? 'selected' : ''}>Código QR (Yape, Plin, etc.)</option>
+                <option value="link" ${isEdit && pm.type === 'link' ? 'selected' : ''}>Enlace de Pago (PayPal, Stripe, etc.)</option>
+                <option value="transfer" ${isEdit && pm.type === 'transfer' ? 'selected' : ''}>Transferencia Bancaria</option>
+              </select>
+            </div>
+            <div class="swal-col-12">
+              <label class="swal-label">Detalles / Instrucciones *</label>
+              <textarea id="swal-pm-details" class="swal-textarea-custom" placeholder="Instrucciones para el cliente (número de cuenta, titular, etc.)..." required>${isEdit && pm.details ? pm.details : ''}</textarea>
+            </div>
+            <div class="swal-col-12" id="swal-pm-link-container">
+              <label class="swal-label">Enlace de Pago</label>
+              <input id="swal-pm-linkUrl" class="swal-input-custom" placeholder="https://..." value="${isEdit && pm.linkUrl ? pm.linkUrl : ''}" />
+            </div>
+            <div class="swal-col-12" id="swal-pm-qr-container" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 12px; margin-top: 8px;">
+              <label class="swal-label">Imagen QR</label>
+              <input type="file" id="swal-pm-qr-file" class="swal-file-custom" accept="image/*" />
+              <div id="swal-pm-qr-preview-container" style="margin-top: 12px; display: ${isEdit && pm.qrImageUrl ? 'block' : 'none'}; text-align: center;">
+                <img id="swal-pm-qr-preview" src="${isEdit && pm.qrImageUrl ? resolveImageUrl(pm.qrImageUrl) : ''}" onerror="this.src='/default_placeholder.png';" style="max-height: 120px; border-radius: 6px; object-fit: cover; border: 1px solid rgba(255,255,255,0.1);" />
+              </div>
+            </div>
+            <div class="swal-col-12 swal-checkbox-container">
+              <input type="checkbox" id="swal-pm-isActive" style="width: 16px; height: 16px; cursor: pointer;" ${!isEdit || pm.isActive ? 'checked' : ''} />
+              <label for="swal-pm-isActive" class="swal-checkbox-label">¿Método de pago activo?</label>
+            </div>
           </div>
         </div>
       `,
@@ -69,7 +74,6 @@ export default function MetodosPagoPage() {
       showCancelButton: true,
       confirmButtonText: isEdit ? 'Actualizar' : 'Guardar',
       cancelButtonText: 'Cancelar',
-      confirmButtonColor: 'var(--color-primary)',
       didOpen: () => {
         const typeSelect = document.getElementById('swal-pm-type');
         const linkContainer = document.getElementById('swal-pm-link-container');
@@ -193,7 +197,9 @@ export default function MetodosPagoPage() {
       text: `Eliminarás el método de pago "${name}". Esta acción no se puede deshacer y fallará si tiene compras asociadas.`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#ef4444',
+      customClass: {
+        confirmButton: 'swal-btn-danger'
+      },
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar'
     });
@@ -294,7 +300,7 @@ export default function MetodosPagoPage() {
                       src={resolveImageUrl(pm.qrImageUrl)} 
                       alt={`QR ${pm.name}`} 
                       style={{ width: 80, height: 80, objectFit: 'contain', borderRadius: 'var(--radius-md)', background: '#fff', padding: 4 }} 
-                      onError={(e) => { e.target.src = '/placeholder.png'; }}
+                      onError={(e) => { e.target.src = '/default_placeholder.png'; }}
                     />
                   ) : (
                     <div style={{

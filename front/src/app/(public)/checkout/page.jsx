@@ -375,6 +375,7 @@ export default function CheckoutPage() {
                       alt={item.name} 
                       style={{ width: '64px', height: '64px', objectFit: 'cover', borderRadius: '8px' }} 
                       className="checkout__cart-item-img" 
+                      onError={(e) => { e.target.src = '/default_placeholder.png'; }}
                     />
                     <div className="checkout__cart-item-info">
                       <span className="checkout__cart-item-name">{item.name}</span>
