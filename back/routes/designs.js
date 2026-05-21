@@ -92,6 +92,13 @@ router.get('/', async (req, res) => {
             slug: true,
           },
         },
+        tags: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
       },
     });
 
@@ -138,6 +145,13 @@ router.get('/slug/:slug', async (req, res) => {
             slug: true,
           },
         },
+        tags: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
       },
     });
 
@@ -163,6 +177,7 @@ router.get('/admin', authenticateToken, isAdmin, async (req, res) => {
     const designs = await prisma.design.findMany({
       include: {
         category: true,
+        tags: true,
       },
       orderBy: { createdAt: 'desc' },
     });
@@ -194,6 +209,7 @@ router.post('/', authenticateToken, isAdmin, async (req, res) => {
     fileFormat,
     isFree,
     megaUrl,
+    tags, // Array de strings opcional
   } = req.body;
 
   if (!categoryId || !name || !imageUrl || !fileFormat || (!isFree && !pricePen && !priceUsd) || !megaUrl) {
@@ -211,6 +227,18 @@ router.post('/', authenticateToken, isAdmin, async (req, res) => {
       return res.status(400).json({ error: 'Ya existe un diseño con este nombre.' });
     }
 
+    let tagsConnectOrCreate = [];
+    if (tags && Array.isArray(tags)) {
+      tagsConnectOrCreate = tags.map(tagName => {
+        const cleanedName = tagName.trim();
+        const tagSlug = slugify(cleanedName);
+        return {
+          where: { slug: tagSlug },
+          create: { name: cleanedName, slug: tagSlug }
+        };
+      });
+    }
+
     const design = await prisma.design.create({
       data: {
         categoryId: parseInt(categoryId),
@@ -226,7 +254,14 @@ router.post('/', authenticateToken, isAdmin, async (req, res) => {
         fileFormat,
         isFree: !!isFree,
         megaUrl,
+        tags: {
+          connectOrCreate: tagsConnectOrCreate
+        }
       },
+      include: {
+        tags: true,
+        category: true
+      }
     });
 
     res.status(201).json(design);
@@ -263,9 +298,31 @@ router.put('/:id', authenticateToken, isAdmin, async (req, res) => {
     if (data.isFree !== undefined) dataToUpdate.isFree = !!data.isFree;
     if (data.megaUrl) dataToUpdate.megaUrl = data.megaUrl;
 
+    if (data.tags && Array.isArray(data.tags)) {
+      const tagIds = [];
+      for (const tagName of data.tags) {
+        const cleanedName = tagName.trim();
+        if (!cleanedName) continue;
+        const tagSlug = slugify(cleanedName);
+        const tagObj = await prisma.tag.upsert({
+          where: { slug: tagSlug },
+          update: {},
+          create: { name: cleanedName, slug: tagSlug }
+        });
+        tagIds.push({ id: tagObj.id });
+      }
+      dataToUpdate.tags = {
+        set: tagIds
+      };
+    }
+
     const design = await prisma.design.update({
       where: { id: parseInt(id) },
       data: dataToUpdate,
+      include: {
+        tags: true,
+        category: true
+      }
     });
 
     res.json(design);

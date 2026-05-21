@@ -69,6 +69,11 @@ export default function DisenosPage() {
               <label class="swal-label">Formato de Archivo *</label>
               <input id="swal-fileFormat" class="swal-input-custom" placeholder="Ej: EPS, AI, PDF" value="${isEdit ? design.fileFormat : ''}" required />
             </div>
+
+            <div class="swal-col-12">
+              <label class="swal-label">Etiquetas (Separadas por comas)</label>
+              <input id="swal-tags" class="swal-input-custom" placeholder="Ej: futbol, barcelona, champions" value="${isEdit && design.tags ? design.tags.map(t => t.name).join(', ') : ''}" />
+            </div>
             
             <div class="swal-col-12 swal-checkbox-container">
               <input type="checkbox" id="swal-isFree" style="width: 16px; height: 16px; cursor: pointer;" ${isEdit && design.isFree ? 'checked' : ''} />
@@ -225,6 +230,8 @@ export default function DisenosPage() {
         const fileFormat = document.getElementById('swal-fileFormat').value.trim();
         const megaUrl = document.getElementById('swal-megaUrl').value.trim();
         const isFree = document.getElementById('swal-isFree').checked;
+        const tagsInput = document.getElementById('swal-tags').value.trim();
+        const tags = tagsInput ? tagsInput.split(',').map(t => t.trim()).filter(Boolean) : [];
 
         const pricePen = document.getElementById('swal-pricePen').value;
         const pricePenDiscount = document.getElementById('swal-pricePenDiscount').value;
@@ -284,7 +291,8 @@ export default function DisenosPage() {
             gallery,
             fileFormat,
             isFree,
-            megaUrl
+            megaUrl,
+            tags
           };
         } catch (err) {
           Swal.showValidationMessage(`Error al guardar: ${err.message}`);
@@ -382,9 +390,12 @@ export default function DisenosPage() {
           <div class="swal-detail-info">
             <div class="swal-detail-header">
               <h3 class="swal-detail-title">${design.name}</h3>
-              <span class="badge badge-purple swal-detail-category-badge">
-                ${design.category ? `${design.category.icon} ${design.category.name}` : 'Sin categoría'}
-              </span>
+              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                <span class="badge badge-purple swal-detail-category-badge" style="margin: 0;">
+                  ${design.category ? `${design.category.icon} ${design.category.name}` : 'Sin categoría'}
+                </span>
+                ${design.tags && design.tags.length > 0 ? design.tags.map(t => `<span class="badge badge-purple" style="font-size: 0.72rem; padding: 4px 10px; opacity: 0.85; border: 1px solid rgba(255,255,255,0.08); background: rgba(168, 85, 247, 0.15); backdrop-filter: blur(4px);"># ${t.name}</span>`).join('') : ''}
+              </div>
             </div>
 
             <div class="swal-detail-description">
