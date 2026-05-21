@@ -33,7 +33,14 @@ function DesignCard({ design }) {
         </div>
       </div>
       <div className="design-card__info">
-        <span className="design-card__category badge badge-purple">{design.category?.name}</span>
+        <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap', marginBottom: '8px' }}>
+          <span className="design-card__category badge badge-purple" style={{ margin: 0 }}>{design.category?.name}</span>
+          {design.tags && design.tags.slice(0, 3).map(tag => (
+            <span key={tag.id} className="badge badge-purple" style={{ fontSize: '0.62rem', padding: '2px 6px', opacity: 0.85, background: 'rgba(168, 85, 247, 0.15)', border: '1px solid rgba(255,255,255,0.05)' }}>
+              #{tag.name}
+            </span>
+          ))}
+        </div>
         <h3 className="design-card__name">{design.name}</h3>
         <div className="design-card__bottom">
           <div className="design-card__price">

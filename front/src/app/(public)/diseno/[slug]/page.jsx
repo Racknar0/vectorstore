@@ -146,9 +146,14 @@ export default function DetalleDiseno({ params }) {
 
         {/* Info */}
         <div className="detalle__info">
-          <div className="detalle__info-top">
+          <div className="detalle__info-top" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
             <span className="badge badge-purple">{design.category?.name}</span>
-            <span className="detalle__downloads">
+            {design.tags && design.tags.map(t => (
+              <span key={t.id} className="badge badge-purple" style={{ fontSize: '0.72rem', padding: '3px 8px', opacity: 0.85, background: 'rgba(168, 85, 247, 0.15)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                # {t.name}
+              </span>
+            ))}
+            <span className="detalle__downloads" style={{ marginLeft: 'auto' }}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                 <polyline points="7,10 12,15 17,10" />

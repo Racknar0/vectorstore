@@ -26,7 +26,14 @@ function LatestCard({ design }) {
         {design.isFree && <span className="latest__card-free">GRATIS</span>}
       </div>
       <div className="latest__card-info">
-        <span className="badge badge-purple" style={{ fontSize: '0.7rem' }}>{design.category?.name}</span>
+        <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap', marginBottom: '8px' }}>
+          <span className="badge badge-purple" style={{ fontSize: '0.7rem' }}>{design.category?.name}</span>
+          {design.tags && design.tags.slice(0, 3).map(tag => (
+            <span key={tag.id} className="badge badge-purple" style={{ fontSize: '0.62rem', padding: '2px 6px', opacity: 0.85, background: 'rgba(168, 85, 247, 0.15)', border: '1px solid rgba(255,255,255,0.05)' }}>
+              #{tag.name}
+            </span>
+          ))}
+        </div>
         <h4 className="latest__card-name">{design.name}</h4>
         <span className="latest__card-price">
           {design.isFree ? 'Gratis' : `S/ ${pricePen.toFixed(2)}`}
