@@ -12,7 +12,7 @@ export default function HeroSection() {
       <div className="hero__content container">
         <span className="hero__badge">
           <span className="hero__badge-dot" />
-          +12.000 diseños disponibles
+          +1000 modelos premium disponibles
         </span>
 
         <h1 className="hero__title">
@@ -44,13 +44,8 @@ export default function HeroSection() {
 
         <div className="hero__stats">
           <div className="hero__stat">
-            <span className="hero__stat-number">12K+</span>
+            <span className="hero__stat-number">1K+</span>
             <span className="hero__stat-label">Diseños</span>
-          </div>
-          <div className="hero__stat-divider" />
-          <div className="hero__stat">
-            <span className="hero__stat-number">8</span>
-            <span className="hero__stat-label">Categorías</span>
           </div>
           <div className="hero__stat-divider" />
           <div className="hero__stat">
